@@ -23,6 +23,11 @@ function Update-Environment-Path
 
 # Choco
 if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) { Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs; exit }
+# create PowerShell profile file before installing choco. 
+if (-Not (Test-Path $profile -PathType Leaf))
+{
+    New-Item -Path $profile -ItemType "file" -Force
+}
 Invoke-WebRequest https://chocolatey.org/install.ps1 -UseBasicParsing | iex
 Update-Environment-Path
 
